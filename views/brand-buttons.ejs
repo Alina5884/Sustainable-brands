@@ -1,0 +1,5 @@
+<% if (user) { %>
+  <a href="<%= showMyBrands ? '/brands' : '/brands/my' %>">
+    <button><%= showMyBrands ? 'All Brands' : 'My Brands' %></button>
+  </a>
+<% } %>

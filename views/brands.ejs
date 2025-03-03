@@ -1,0 +1,88 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs", { csrfToken: csrfToken }) %>
+<%- include("home.ejs", { showHomeButton: showHomeButton, csrfToken: csrfToken }) %>
+<%- include("brand-buttons.ejs", { showMyBrands: showMyBrands, user: user }) %>
+
+<form action="<%= showMyBrands ? '/brands/my' : '/brands' %>" method="GET">
+  <input type="text" name="search" placeholder="Search..." value="<%= search %>">
+  
+  <div class="brands-container">
+    <aside class="filters">
+      <form action="<%= showMyBrands ? '/brands/my' : '/brands' %>" method="GET">
+        <h3>Sort & Filter</h3>
+        <input type="text" name="search" placeholder="Search..." value="<%= search %>">
+        
+        <h4>Sort by:</h4>
+        <select name="order" onchange="this.form.submit()">
+          <option value="asc" <%= sortOrder === 'asc' ? 'selected' : '' %>>A-Z</option>
+          <option value="desc" <%= sortOrder === 'desc' ? 'selected' : '' %>>Z-A</option>
+        </select>
+  
+        <h4>Category:</h4>
+        <% ['Clothing', 'Shoes', 'Accessories', 'Tableware', 'Other'].forEach(cat => { %>
+          <label>
+            <input type="checkbox" name="category" value="<%= cat %>" <%= category.includes(cat) ? 'checked' : '' %>> <%= cat %>
+          </label>
+        <% }) %>
+  
+        <h4>Criteria:</h4>
+        <% const criteria = {ecoFriendly: '🌱 Eco-Friendly', nonToxic: '🚫 Non-Toxic', plasticFree: '♻️ Plastic-Free', veganCrueltyFree: '🐰 Vegan & Cruelty-Free'}; %>
+        <% for (let key in criteria) { %>
+          <label>
+            <input type="checkbox" name="<%= key %>" value="true" <%= eval(key) ? 'checked' : '' %>> <%= criteria[key] %>
+          </label>
+        <% } %>
+  
+        <button type="submit">Apply</button>
+      </form>
+    </aside>
+  
+    <main class="brands-grid">
+      <% brands.forEach((brand) => { %>
+        <div class="brand-card">
+          <h3><%= brand.name %></h3>
+          <p class="category"><%= brand.category %></p>
+          <p><%= brand.description %></p>
+          <div class="criteria">
+            <%= brand.ecoFriendly ? '🌱' : '' %>
+            <%= brand.nonToxic ? '🚫' : '' %>
+            <%= brand.plasticFree ? '♻️' : '' %>
+            <%= brand.veganCrueltyFree ? '🐰' : '' %>
+          </div>
+          <% if (showMyBrands) { %>
+            <div class="actions">
+              <a href="/brands/edit/<%= brand._id %>" class="btn edit">Edit</a>
+              <form action="/brands/delete/<%= brand._id %>?_method=DELETE" method="POST">
+                <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                <button type="submit" class="btn delete">Delete</button>
+              </form>
+            </div>
+          <% } %>
+        </div>
+      <% }) %>
+    </main>
+  </div>
+
+<% 
+  function generatePageLink(page) {
+    return showMyBrands 
+      ? `/brands/my?page=${page}&search=${search}&order=${sortOrder}&category=${category.join(',')}&ecoFriendly=${ecoFriendly}&nonToxic=${nonToxic}&plasticFree=${plasticFree}&veganCrueltyFree=${veganCrueltyFree}`
+      : `/brands?page=${page}&search=${search}&order=${sortOrder}&category=${category.join(',')}&ecoFriendly=${ecoFriendly}&nonToxic=${nonToxic}&plasticFree=${plasticFree}&veganCrueltyFree=${veganCrueltyFree}`;
+  }
+%>
+
+<div class="pagination">
+  <% if (currentPage > 1) { %>
+    <a href="<%= generatePageLink(currentPage - 1) %>">Previous</a>
+  <% } %>
+  <span>Page <%= currentPage %> of <%= totalPages %></span>
+  <% if (currentPage < totalPages) { %>
+    <a href="<%= generatePageLink(currentPage + 1) %>">Next</a>
+  <% } %>
+</div>
+
+<% if (user) { %>
+  <a href="/brands/new"><button>Add a new brand</button></a>
+<% } %>
+
+<%- include("partials/footer.ejs") %>

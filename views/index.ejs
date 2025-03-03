@@ -1,0 +1,11 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs", { csrfToken: csrfToken }) %>
+
+<div class="home-container">
+  <div class="buttons">
+    <a href="/brands" class="btn">View All Brands</a>
+    <a href="/brands/my" class="btn">View My Brands</a>
+  </div>
+</div>
+
+<%- include("partials/footer.ejs") %>
