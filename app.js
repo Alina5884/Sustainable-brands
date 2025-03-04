@@ -16,6 +16,11 @@ const xss = require('xss-clean');
 const rateLimit = require('express-rate-limit');
 const methodOverride = require('method-override');
 
+const connectDB = require('./db/connect');
+const url = process.env.MONGO_URI;
+
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(helmet());
 app.use(xss());
 app.use(methodOverride('_method'));
@@ -27,8 +32,8 @@ const limiter = rateLimit({
 });
 app.use(limiter);
 
-const connectDB = require('./db/connect');
-const url = process.env.MONGO_URI;
+app.use(require('body-parser').urlencoded({ extended: true }));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 const store = new MongoDBStore({
   uri: url,
@@ -44,29 +49,15 @@ const sessionParms = {
   saveUninitialized: true,
   store: store,
   cookie: {
-    secure: true,      //Aliina, don't forget: false - for local
+    secure: false,
     httpOnly: true,
     sameSite: 'strict',
   },
 };
 app.use(session(sessionParms));
 
-const passport = require('passport');
-const passportInit = require('./passport/passportInit');
-
-passportInit();
-app.use(passport.initialize());
-app.use(passport.session());
-
-app.use(flash());
-app.set('view engine', 'ejs');
-
-app.use(cookieParser(process.env.COOKIE_SECRET));
-app.use(require('body-parser').urlencoded({ extended: true }));
-
 const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
-
 app.use((req, res, next) => {
   if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
     res.locals.csrfToken = req.csrfToken();
@@ -74,6 +65,13 @@ app.use((req, res, next) => {
   next();
 });
 
+const passport = require('passport');
+const passportInit = require('./passport/passportInit');
+passportInit();
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(flash());
 app.use((req, res, next) => {
   console.log('Request received:', req.method, req.url);
   next();
@@ -82,9 +80,14 @@ app.use((req, res, next) => {
 const storeLocals = require('./middleware/storeLocals');
 app.use(storeLocals);
 
-const brands = require('./routes/brands');
-app.use('/brands', brands);
+app.use((req, res, next) => {
+  res.locals.user = req.user;
+  next();
+});
 
+app.set('view engine', 'ejs');
+
+app.use('/brands', require('./routes/brands'));
 app.get('/', (req, res) => {
   res.render('index');
 });
@@ -92,12 +95,8 @@ app.get('/', (req, res) => {
 app.use('/sessions', require('./routes/sessionRoutes'));
 
 app.use(csrfErrorHandler);
-
 app.use(notFound);
-
 app.use(errorHandlerMiddleware);
-
-app.use(express.static(path.join(__dirname, 'public')));
 
 const port = process.env.PORT || 3000;
 

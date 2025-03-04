@@ -3,25 +3,25 @@ const passport = require('passport');
 const router = express.Router();
 
 const {
-  logonShow,
+  loginShow,
   registerShow,
   registerDo,
-  logoff,
+  logout,
 } = require('../controllers/sessionController');
 
 router.route('/register').get(registerShow).post(registerDo);
 
 router
-  .route('/logon')
-  .get(logonShow)
+  .route('/login')
+  .get(loginShow)
   .post(
     passport.authenticate('local', {
       successRedirect: '/',
-      failureRedirect: '/sessions/logon',
+      failureRedirect: '/sessions/login',
       failureFlash: true,
     })
   );
 
-router.route('/logoff').post(logoff);
+router.route('/logout').post(logout);
 
 module.exports = router;

@@ -1,3 +1,15 @@
-<% if (showHomeButton) { %>
-    <a href="/" class="home-button">Home</a>
-  <% } %>
+<div class="buttons-container">
+  <div class="button-container">
+    <% if (showHomeButton) { %>
+      <a href="/" class="btn home">Home</a>
+    <% } %>
+  </div>
+
+  <div>
+    <% if (user) { %>
+      <a href="<%= showMyBrands ? '/brands' : '/brands/my' %>" class="btn toggle">
+        <%= showMyBrands ? 'All Brands' : 'My Brands' %>
+      </a>
+    <% } %>
+  </div>
+</div>

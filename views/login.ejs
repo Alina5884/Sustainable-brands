@@ -1,0 +1,26 @@
+<%- include("partials/head.ejs") %>
+<%- include("partials/header.ejs", { csrfToken: csrfToken }) %>
+
+<div class="auth-container">
+  <form method="POST" class="auth-form">
+    <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+    <h2>Login</h2>
+    
+    <div>
+      <label for="email">Enter your email:</label>
+      <input type="email" id="email" name="email" required />
+    </div>
+    
+    <div>
+      <label for="password">Enter your password:</label>
+      <input type="password" id="password" name="password" required />
+    </div>
+    
+    <button type="submit">Login</button>
+    <a href="/">
+      <button type="button" class="cancel">Cancel</button>
+    </a>
+  </form>
+</div>
+
+<%- include("partials/footer.ejs") %>

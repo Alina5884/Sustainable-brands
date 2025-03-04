@@ -32,10 +32,10 @@ const registerDo = async (req, res, next) => {
   }
 
   req.flash('info', 'Registration successful!');
-  res.redirect('/sessions/logon');
+  res.redirect('/sessions/login');
 };
 
-const logoff = (req, res) => {
+const logout = (req, res) => {
   req.session.destroy(function (err) {
     if (err) {
       console.log(err);
@@ -44,20 +44,20 @@ const logoff = (req, res) => {
   });
 };
 
-const logonShow = (req, res) => {
+const loginShow = (req, res) => {
   if (req.user) {
     return res.redirect('/');
   }
-  res.render('logon', { csrfToken: req.csrfToken() });
+  res.render('login', { csrfToken: req.csrfToken() });
 };
 
-const logonDo = async (req, res, next) => {
+const loginDo = async (req, res, next) => {
   try {
     const user = await User.findOne({ email: req.body.email });
 
     if (!user) {
       req.flash('error', 'Invalid email or password.');
-      return res.render('logon', {
+      return res.render('login', {
         errors: req.flash('error'),
         formData: req.body,
       });
@@ -67,7 +67,7 @@ const logonDo = async (req, res, next) => {
 
     if (!isMatch) {
       req.flash('error', 'Invalid email or password.');
-      return res.render('logon', {
+      return res.render('login', {
         errors: req.flash('error'),
         formData: req.body,
       });
@@ -87,7 +87,7 @@ const logonDo = async (req, res, next) => {
 module.exports = {
   registerShow,
   registerDo,
-  logoff,
-  logonShow,
-  logonDo,
+  logout,
+  loginShow,
+  loginDo,
 };

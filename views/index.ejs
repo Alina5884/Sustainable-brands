@@ -1,11 +1,47 @@
 <%- include("partials/head.ejs") %>
 <%- include("partials/header.ejs", { csrfToken: csrfToken }) %>
 
-<div class="home-container">
-  <div class="buttons">
-    <a href="/brands" class="btn">View All Brands</a>
-    <a href="/brands/my" class="btn">View My Brands</a>
-  </div>
+<div class="auth-container">
+  <% if (!user) { %> 
+    <div class="auth-forms">
+      <div class="auth-form register-form">
+        <h2>Register</h2>
+        <form method="POST" action="/sessions/register">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>" />
+          <div>
+            <label for="name">Enter your name:</label>
+            <input type="text" id="name" name="name" required />
+          </div>
+          <div>
+            <label for="email">Enter your email:</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div>
+            <label for="password">Enter your password:</label>
+            <input type="password" id="password" name="password" required />
+          </div>
+          <div>
+            <label for="password1">Confirm your password:</label>
+            <input type="password" id="password1" name="password1" required />
+          </div>
+          <div>
+            <button type="submit" class="btn">Register</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="login-form">
+        <h2>Already have an account?</h2>
+        <a href="/sessions/login" class="btn">Login</a>
+      </div>
+    </div>
+  <% } else { %>
+    <div class="buttons">
+      <a href="/brands" class="btn">View All Brands</a>
+      <a href="/brands/my" class="btn">View My Brands</a>
+    </div>
+  <% } %>
 </div>
+
 
 <%- include("partials/footer.ejs") %>

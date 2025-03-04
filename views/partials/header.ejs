@@ -1,25 +1,29 @@
-<h1>Sustainable Brands</h1>
+<div class="container">
+  <h1>Sustainable Brands</h1>
 
-<% if (user) { %>
-   <p>User <%= user.name %> is logged on.</p>
-   <form method="POST" action="/sessions/logoff">
-    <% if (csrfToken) { %>
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-    <% } %>
-    <button type="submit">Logoff</button>
-   </form>
-<% } %>
+  <% if (user) { %>
+    <div class="auth-header">
+      <p>User <%= user.name %> is logged in.</p>
+      <form method="POST" action="/sessions/logout">
+        <% if (csrfToken) { %>
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <% } %>
+        <button type="submit" class="btn logout">Log Out</button>
+      </form>
+    </div>
+  <% } %>
 
-<% if (errors && errors.length > 0) { %>
-  <div class="alert error">
-    <%= errors.join("<br>") %>
-  </div>
-<% } %>
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert error">
+      <%= errors.join("<br>") %>
+    </div>
+  <% } %>
 
-<% if (info && info.length > 0) { %>
-  <div class="alert success">
-    <%= info.join("<br>") %>
-  </div>
-<% } %>
+  <% if (info && info.length > 0) { %>
+    <div class="alert success">
+      <%= info.join("<br>") %>
+    </div>
+  <% } %>
 
-<hr />
+  <hr />
+</div>

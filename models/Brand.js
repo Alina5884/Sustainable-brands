@@ -17,17 +17,6 @@ const BrandSchema = new mongoose.Schema(
       required: [true, 'Please provide a short description'],
       maxlength: 500,
     },
-    logo: {
-      type: String,
-      required: false,
-      validate: {
-        validator: function (v) {
-          if (!v) return true;
-          return /^https?:\/\/\S+\.\S+/.test(v);
-        },
-        message: 'Please provide a valid logo URL',
-      },
-    },
     website: {
       type: String,
       required: [true, 'Please provide the brand website'],
