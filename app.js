@@ -49,7 +49,7 @@ const sessionParms = {
   saveUninitialized: true,
   store: store,
   cookie: {
-    secure: false,
+    secure: true,
     httpOnly: true,
     sameSite: 'strict',
   },
