@@ -8,13 +8,15 @@
     "dev": "nodemon app.js",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "NODE_ENV=test mocha tests/*.js --timeout 5000 --exit"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcryptjs": "^3.0.2",
+    "chai": "^4.3.5",
+    "cheerio": "^1.0.0",
     "compression": "^1.8.0",
     "connect-flash": "^0.1.1",
     "connect-mongodb-session": "^5.0.0",
@@ -37,13 +39,19 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "path": "^0.12.7",
+    "supertest": "^7.0.0",
     "xss-clean": "^0.1.4"
   },
   "devDependencies": {
+    "@faker-js/faker": "^9.5.1",
+    "chai-http": "^4.4.0",
     "eslint": "^9.21.0",
     "eslint-config-prettier": "^10.0.2",
     "eslint-plugin-prettier": "^5.2.3",
+    "factory-bot": "^6.3.1",
+    "mocha": "^11.1.0",
     "nodemon": "^3.1.9",
-    "prettier": "^3.5.3"
+    "prettier": "^3.5.3",
+    "puppeteer": "^24.3.1"
   }
 }
