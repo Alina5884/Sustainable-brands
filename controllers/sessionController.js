@@ -2,14 +2,13 @@ const User = require('../models/User');
 const parseVErr = require('../utils/parseValidationErrors');
 
 const registerShow = (req, res) => {
-  res.render('register', { csrfToken: req.csrfToken() });
+  res.render('index', { csrfToken: req.csrfToken() });
 };
 
 const registerDo = async (req, res, next) => {
-  console.log('Received passwords:', req.body.password, req.body.password1);
   if (req.body.password !== req.body.password1) {
     req.flash('error', 'The passwords entered do not match.');
-    return res.render('register', {
+    return res.render('index', {
       errors: req.flash('error'),
       formData: req.body,
     });
@@ -25,7 +24,7 @@ const registerDo = async (req, res, next) => {
     } else {
       return next(e);
     }
-    return res.render('register', {
+    return res.render('index', {
       errors: req.flash('error'),
       formData: req.body,
     });

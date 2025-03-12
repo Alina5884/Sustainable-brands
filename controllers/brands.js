@@ -2,10 +2,14 @@ const Brand = require('../models/Brand');
 
 exports.list = async (req, res) => {
   try {
-    const search = Array.isArray(req.query.search) 
-      ? req.query.search.find(s => s.trim() !== '') || '' 
+    const search = Array.isArray(req.query.search)
+      ? req.query.search.find((s) => s.trim() !== '') || ''
       : req.query.search || '';
-    const category = Array.isArray(req.query.category) ? req.query.category : req.query.category ? [req.query.category] : [];
+    const category = Array.isArray(req.query.category)
+      ? req.query.category
+      : req.query.category
+        ? [req.query.category]
+        : [];
     const ecoFriendly = req.query.ecoFriendly === 'true';
     const nonToxic = req.query.nonToxic === 'true';
     const plasticFree = req.query.plasticFree === 'true';
@@ -19,7 +23,7 @@ exports.list = async (req, res) => {
     if (search) {
       query.$or = [
         { name: new RegExp(search, 'i') },
-        { description: new RegExp(search, 'i') }
+        { description: new RegExp(search, 'i') },
       ];
     }
 
@@ -31,9 +35,6 @@ exports.list = async (req, res) => {
 
     const totalBrands = await Brand.countDocuments(query);
     const skip = (page - 1) * pageSize;
-
-    console.log('Query:', JSON.stringify(query, null, 2));
-
 
     const brands = await Brand.find(query)
       .sort({ name: sortOrder })
@@ -68,10 +69,14 @@ exports.myBrands = async (req, res) => {
       console.error('User not authenticated');
       return res.status(401).send('User not authenticated');
     }
-    const search = Array.isArray(req.query.search) 
-      ? req.query.search.find(s => s.trim() !== '') || '' 
+    const search = Array.isArray(req.query.search)
+      ? req.query.search.find((s) => s.trim() !== '') || ''
       : req.query.search || '';
-    const category = Array.isArray(req.query.category) ? req.query.category : req.query.category ? [req.query.category] : [];
+    const category = Array.isArray(req.query.category)
+      ? req.query.category
+      : req.query.category
+        ? [req.query.category]
+        : [];
     const ecoFriendly = req.query.ecoFriendly === 'true';
     const nonToxic = req.query.nonToxic === 'true';
     const plasticFree = req.query.plasticFree === 'true';
@@ -85,7 +90,7 @@ exports.myBrands = async (req, res) => {
     if (search) {
       query.$or = [
         { name: new RegExp(search, 'i') },
-        { description: new RegExp(search, 'i') }
+        { description: new RegExp(search, 'i') },
       ];
     }
 
@@ -176,7 +181,6 @@ exports.edit = async (req, res) => {
 
 exports.update = async (req, res) => {
   try {
-
     const brand = await Brand.findById(req.params.id);
     if (!brand || brand.createdBy.toString() !== req.user._id.toString()) {
       return res.status(403).send('Unauthorized');
